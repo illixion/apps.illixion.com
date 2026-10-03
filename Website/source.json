@@ -55,7 +55,7 @@
       "bundleIdentifier": "pro.longwave.ios",
       "developerName": "Illixion",
       "subtitle": "Remote desktop and game streaming",
-      "localizedDescription": "Connect to your computers from iPhone and iPad: VNC remote desktop, game streaming from a Sunshine or GameStream host, and an SSH terminal. This build is the iPhone and iPad app only; it needs a host on your network or reachable over a VPN.",
+      "localizedDescription": "Connect to your computers from iPhone and iPad: native Mac streaming, VNC remote desktop, game streaming from a Sunshine or GameStream host, system audio and an SSH terminal. It needs a host on your network or reachable over a VPN.",
       "iconURL": "https://apps.illixion.com/icons/longwave.png",
       "tintColor": "#B58BE0",
       "versions": [
@@ -87,7 +87,7 @@
       "bundleIdentifier": "com.illixion.worldcast.Worldcast",
       "developerName": "Illixion",
       "subtitle": "Single-user podcast listener",
-      "localizedDescription": "The iPhone and iPad client for a Worldcast server, a self-hosted podcast listener for one person. It needs your own Worldcast server to sign in to. The Apple Watch app is not part of this build.",
+      "localizedDescription": "A podcast player for iPhone and iPad. It works on its own, reading RSS feeds directly and playing MP3s you add to its Documents folder, or syncs subscriptions and progress with your own Worldcast server. The Apple Watch app is not part of this build.",
       "iconURL": "https://apps.illixion.com/icons/worldcast.png",
       "tintColor": "#FF6B35",
       "versions": [
