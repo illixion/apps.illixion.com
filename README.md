@@ -20,9 +20,10 @@ Watch app, because each one costs a free Apple ID another App ID. Bump the app's
 
 ## Deploy
 
-Cloudflare Pages builds from this repo on every push to `main`: no build command, output
-directory `Website`, custom domain `apps.illixion.com`. A release is therefore `release` plus a
-commit and push; the IPA itself is already on GitHub by then.
+Cloudflare builds from this repo on every push to `main`. `wrangler.jsonc` serves `Website/` as
+static assets (no Worker script, no build command; the deploy command is `npx wrangler deploy`),
+with `apps.illixion.com` as the custom domain. A release is therefore `release` plus a commit and
+push; the IPA itself is already on GitHub by then.
 
 ## Adding an app
 
