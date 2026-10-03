@@ -6,7 +6,112 @@
   "iconURL": "https://apps.illixion.com/icons/convolution.png",
   "website": "https://apps.illixion.com",
   "tintColor": "#C8935A",
-  "featuredApps": [],
-  "apps": [],
+  "featuredApps": [
+    "com.illixion.hypnos",
+    "pro.longwave.ios",
+    "com.illixion.worldcast.Worldcast"
+  ],
+  "apps": [
+    {
+      "name": "Convolution",
+      "bundleIdentifier": "com.illixion.hypnos",
+      "developerName": "Illixion",
+      "subtitle": "Photo, video and film library",
+      "localizedDescription": "Browse your Photos library, a Stash, Nextcloud or Jellyfin server, or local files, and play films with real object audio. The 2D-to-3D conversion features need Apple Vision Pro; on iPhone and iPad you get the library, viewer and film player.",
+      "iconURL": "https://apps.illixion.com/icons/convolution.png",
+      "tintColor": "#C8935A",
+      "versions": [
+        {
+          "version": "1.0",
+          "buildVersion": "708",
+          "date": "2026-10-03T16:06:09Z",
+          "localizedDescription": "Built from v0.1.0-02663c58. What changed: https://github.com/illixion/Convolution/releases/tag/v0.1.0-02663c58",
+          "downloadURL": "https://github.com/illixion/Convolution/releases/download/v0.1.0-02663c58/Convolution-iOS-unsigned.ipa",
+          "size": 6766051,
+          "sha256": "2edf01a585b4390aff5b225442729d9252d323e2851885fe91f265eb78643d4f",
+          "minOSVersion": "26.0"
+        }
+      ],
+      "appPermissions": {
+        "entitlements": [],
+        "privacy": {
+          "NSLocalNetworkUsageDescription": "Convolution connects to the media servers you configure so you can browse and stream your own libraries, and to your other devices running Convolution when you set up an Apple TV from them.",
+          "NSMotionUsageDescription": "Convolution follows your headphones’ head movement so spatial audio stays in place when you turn your head.",
+          "NSPhotoLibraryUsageDescription": "Convolution shows your photos and videos, and on Apple Vision Pro converts them to 3D. Your library is read on this device only — nothing is uploaded.",
+          "NSWorldSensingUsageDescription": "This is used to determine window locking state to improve user experience."
+        }
+      },
+      "version": "1.0",
+      "versionDate": "2026-10-03T16:06:09Z",
+      "versionDescription": "Built from v0.1.0-02663c58. What changed: https://github.com/illixion/Convolution/releases/tag/v0.1.0-02663c58",
+      "downloadURL": "https://github.com/illixion/Convolution/releases/download/v0.1.0-02663c58/Convolution-iOS-unsigned.ipa",
+      "size": 6766051,
+      "screenshotURLs": [
+        "https://apps.illixion.com/screenshots/convolution-1.jpg"
+      ]
+    },
+    {
+      "name": "Longwave",
+      "bundleIdentifier": "pro.longwave.ios",
+      "developerName": "Illixion",
+      "subtitle": "Remote desktop and game streaming",
+      "localizedDescription": "Connect to your computers from iPhone and iPad: VNC remote desktop, game streaming from a Sunshine or GameStream host, and an SSH terminal. This build is the iPhone and iPad app only; it needs a host on your network or reachable over a VPN.",
+      "iconURL": "https://apps.illixion.com/icons/longwave.png",
+      "tintColor": "#B58BE0",
+      "versions": [
+        {
+          "version": "1.0",
+          "buildVersion": "382",
+          "date": "2026-10-03T16:23:58Z",
+          "localizedDescription": "Built from 0.1.0-f5a6e312. What changed: https://github.com/illixion/Longwave/releases/tag/0.1.0-f5a6e312",
+          "downloadURL": "https://github.com/illixion/Longwave/releases/download/0.1.0-f5a6e312/Longwave-iOS-unsigned.ipa",
+          "size": 4865558,
+          "sha256": "14b8f8bb5ad84d8b4afff1c331709f76a8167d19c1c8047c13002a8dfd56b4be",
+          "minOSVersion": "26.0"
+        }
+      ],
+      "appPermissions": {
+        "entitlements": [],
+        "privacy": {
+          "NSLocalNetworkUsageDescription": "Longwave connects to remote desktops, SSH hosts, and the Companion on your local network."
+        }
+      },
+      "version": "1.0",
+      "versionDate": "2026-10-03T16:23:58Z",
+      "versionDescription": "Built from 0.1.0-f5a6e312. What changed: https://github.com/illixion/Longwave/releases/tag/0.1.0-f5a6e312",
+      "downloadURL": "https://github.com/illixion/Longwave/releases/download/0.1.0-f5a6e312/Longwave-iOS-unsigned.ipa",
+      "size": 4865558
+    },
+    {
+      "name": "Worldcast",
+      "bundleIdentifier": "com.illixion.worldcast.Worldcast",
+      "developerName": "Illixion",
+      "subtitle": "Single-user podcast listener",
+      "localizedDescription": "The iPhone and iPad client for a Worldcast server, a self-hosted podcast listener for one person. It needs your own Worldcast server to sign in to. The Apple Watch app is not part of this build.",
+      "iconURL": "https://apps.illixion.com/icons/worldcast.png",
+      "tintColor": "#FF6B35",
+      "versions": [
+        {
+          "version": "1.0",
+          "buildVersion": "33",
+          "date": "2026-10-03T16:00:34Z",
+          "localizedDescription": "Built from 0.1.0-dcadfdcd. What changed: https://github.com/illixion/worldcast/releases/tag/0.1.0-dcadfdcd",
+          "downloadURL": "https://github.com/illixion/worldcast/releases/download/0.1.0-dcadfdcd/Worldcast-iOS-unsigned.ipa",
+          "size": 420247,
+          "sha256": "24f519946d67d24edea50063aa32e8d8f18a8e9ce9addc579d53ba2525f46d29",
+          "minOSVersion": "26.5"
+        }
+      ],
+      "appPermissions": {
+        "entitlements": [],
+        "privacy": {}
+      },
+      "version": "1.0",
+      "versionDate": "2026-10-03T16:00:34Z",
+      "versionDescription": "Built from 0.1.0-dcadfdcd. What changed: https://github.com/illixion/worldcast/releases/tag/0.1.0-dcadfdcd",
+      "downloadURL": "https://github.com/illixion/worldcast/releases/download/0.1.0-dcadfdcd/Worldcast-iOS-unsigned.ipa",
+      "size": 420247
+    }
+  ],
   "news": []
 }

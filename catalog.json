@@ -28,9 +28,26 @@
         "repo": "illixion/Convolution",
         "asset": "Convolution-iOS-unsigned.ipa"
       },
-      "versions": [],
+      "versions": [
+        {
+          "version": "1.0",
+          "buildVersion": "708",
+          "date": "2026-10-03T16:06:09Z",
+          "localizedDescription": "Built from v0.1.0-02663c58. What changed: https://github.com/illixion/Convolution/releases/tag/v0.1.0-02663c58",
+          "downloadURL": "https://github.com/illixion/Convolution/releases/download/v0.1.0-02663c58/Convolution-iOS-unsigned.ipa",
+          "size": 6766051,
+          "sha256": "2edf01a585b4390aff5b225442729d9252d323e2851885fe91f265eb78643d4f",
+          "minOSVersion": "26.0"
+        }
+      ],
       "links": {
         "github": "https://github.com/illixion/Convolution"
+      },
+      "privacy": {
+        "NSLocalNetworkUsageDescription": "Convolution connects to the media servers you configure so you can browse and stream your own libraries, and to your other devices running Convolution when you set up an Apple TV from them.",
+        "NSMotionUsageDescription": "Convolution follows your headphones’ head movement so spatial audio stays in place when you turn your head.",
+        "NSPhotoLibraryUsageDescription": "Convolution shows your photos and videos, and on Apple Vision Pro converts them to 3D. Your library is read on this device only — nothing is uploaded.",
+        "NSWorldSensingUsageDescription": "This is used to determine window locking state to improve user experience."
       }
     },
     {
@@ -46,10 +63,24 @@
         "repo": "illixion/Longwave",
         "asset": "Longwave-iOS-unsigned.ipa"
       },
-      "versions": [],
+      "versions": [
+        {
+          "version": "1.0",
+          "buildVersion": "382",
+          "date": "2026-10-03T16:23:58Z",
+          "localizedDescription": "Built from 0.1.0-f5a6e312. What changed: https://github.com/illixion/Longwave/releases/tag/0.1.0-f5a6e312",
+          "downloadURL": "https://github.com/illixion/Longwave/releases/download/0.1.0-f5a6e312/Longwave-iOS-unsigned.ipa",
+          "size": 4865558,
+          "sha256": "14b8f8bb5ad84d8b4afff1c331709f76a8167d19c1c8047c13002a8dfd56b4be",
+          "minOSVersion": "26.0"
+        }
+      ],
       "links": {
         "github": "https://github.com/illixion/Longwave",
         "site": "https://longwave.pro"
+      },
+      "privacy": {
+        "NSLocalNetworkUsageDescription": "Longwave connects to remote desktops, SSH hosts, and the Companion on your local network."
       }
     },
     {
@@ -65,10 +96,22 @@
         "repo": "illixion/worldcast",
         "asset": "Worldcast-iOS-unsigned.ipa"
       },
-      "versions": [],
+      "versions": [
+        {
+          "version": "1.0",
+          "buildVersion": "33",
+          "date": "2026-10-03T16:00:34Z",
+          "localizedDescription": "Built from 0.1.0-dcadfdcd. What changed: https://github.com/illixion/worldcast/releases/tag/0.1.0-dcadfdcd",
+          "downloadURL": "https://github.com/illixion/worldcast/releases/download/0.1.0-dcadfdcd/Worldcast-iOS-unsigned.ipa",
+          "size": 420247,
+          "sha256": "24f519946d67d24edea50063aa32e8d8f18a8e9ce9addc579d53ba2525f46d29",
+          "minOSVersion": "26.5"
+        }
+      ],
       "links": {
         "github": "https://github.com/illixion/worldcast"
-      }
+      },
+      "privacy": {}
     }
   ],
   "news": []
