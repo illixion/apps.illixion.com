@@ -2,127 +2,45 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>Illixion Apps</title>
-  <meta name="description" content="Apps for Apple Vision Pro, iPhone, iPad, Mac and Apple Watch, made by one developer.">
+  <meta name="description" content="Install Ixion&#x27;s iPhone and iPad apps with AltStore or SideStore.">
   <meta name="color-scheme" content="light dark">
+  <meta name="theme-color" content="#E9EBF5" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#0E0F1A" media="(prefers-color-scheme: dark)">
   <link rel="icon" href="icons/convolution.png">
-  <link rel="preload" href="fonts/bricolage.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-<a class="skip" href="#apps">Skip to the apps</a>
-<div class="shell">
-  <nav class="rail" aria-label="Categories">
-    <p class="mark"><a href="./">Illixion Apps</a></p>
-    <ul>
-<li><a href="#media">Media</a></li>
-<li><a href="#remote">Remote and streaming</a></li>
-<li><a href="#listening">Listening</a></li>
-      <li><a href="#sideload">Sideloading</a></li>
+<main>
+  <section class="glass">
+    <h1>Illixion Apps</h1>
+    <p>Install Ixion&#x27;s iPhone and iPad apps with AltStore or SideStore. What each app does is on <a href="https://illixion.com/#apps">illixion.com</a>.</p>
+    <p class="actions">
+      <a class="pill primary" href="altstore://source?url=https://apps.illixion.com/source.json">Add to AltStore</a>
+      <a class="pill" href="sidestore://source?url=https://apps.illixion.com/source.json">Add to SideStore</a>
+    </p>
+    <p class="muted">Or paste this address into the app's Sources tab:</p>
+    <p class="url"><code>https://apps.illixion.com/source.json</code> <button class="pill small" type="button" data-copy="https://apps.illixion.com/source.json">Copy</button></p>
+  </section>
+
+  <section class="glass">
+    <h2>In this source</h2>
+    <ul class="apps">
+      <li class="muted">No builds are published yet.</li>
     </ul>
-  </nav>
+  </section>
 
-  <main id="apps">
-    <header class="intro">
-      <h1>Apps for Apple Vision Pro, iPhone, iPad, Mac and Apple Watch, made by one developer.</h1>
-      <p>The code for every app here is public on GitHub. Most are not on the App Store yet, so the iPhone and iPad versions install through AltStore or SideStore.</p>
-    </header>
-
-    <section class="category" id="media" aria-labelledby="h-media">
-      <div class="cat-head">
-        <h2 id="h-media">Media</h2>
-        <p>Browse, view and play your own photos, video and films.</p>
-      </div>
-      <article class="app" id="convolution">
-        <header>
-          <img src="icons/convolution.png" width="72" height="72" alt="">
-          <h3>Convolution</h3>
-          <p class="tag">Photo, video and film library</p>
-        </header>
-        <div class="body">
-        <p>Convolution is one library for pictures, video and films. Point it at your Photos library, a Stash, Nextcloud or Jellyfin server, or a folder of local files, and browse them in a grid that keeps each image&#x27;s real proportions.</p>
-        <p>Films play with their object audio intact, so overhead sounds stay overhead and move with your head instead of being folded down to 7.1. On Vision Pro it also turns flat photos and videos into 3D. That part needs the headset; the iPhone and iPad app is the library, viewer and film player.</p>
-          <dl class="facts">
-          <div><dt>Runs on</dt><dd>Vision Pro, iPhone, iPad, Apple TV, Mac</dd></div>
-          <div><dt>Needs</dt><dd>Photos library, or a Stash, Nextcloud or Jellyfin server</dd></div>
-          </dl>
-          <ul class="links"><li><a href="https://github.com/illixion/Convolution">Source on GitHub</a></li></ul>
-        </div>
-      </article>
-    </section>
-    <section class="category" id="remote" aria-labelledby="h-remote">
-      <div class="cat-head">
-        <h2 id="h-remote">Remote and streaming</h2>
-        <p>Reach your computers and servers from wherever you are.</p>
-      </div>
-      <article class="app" id="longwave">
-        <header>
-          <img src="icons/longwave.png" width="72" height="72" alt="">
-          <h3>Longwave</h3>
-          <p class="tag">Remote desktop and game streaming</p>
-        </header>
-        <div class="body">
-        <p>Longwave connects you to your computers. It does VNC remote desktop, streams games from a Sunshine or GameStream host, and gives you an SSH terminal, with audio coming along.</p>
-        <p>On Vision Pro the desktops and terminals sit in the room as windows you place where you want them. On iPhone and iPad it is the same set of connections on a flat screen.</p>
-          <dl class="facts">
-          <div><dt>Runs on</dt><dd>Vision Pro, iPhone, iPad, Mac</dd></div>
-          <div><dt>Needs</dt><dd>A computer to connect to, on your network or over a VPN</dd></div>
-          </dl>
-          <ul class="links"><li><a href="https://github.com/illixion/Longwave">Source on GitHub</a></li><li><a href="https://longwave.pro">Website</a></li></ul>
-        </div>
-      </article>
-    </section>
-    <section class="category" id="listening" aria-labelledby="h-listening">
-      <div class="cat-head">
-        <h2 id="h-listening">Listening</h2>
-        <p>Audio you own, on every screen you have.</p>
-      </div>
-      <article class="app" id="worldcast">
-        <header>
-          <img src="icons/worldcast.png" width="72" height="72" alt="">
-          <h3>Worldcast</h3>
-          <p class="tag">Single-user podcast listener</p>
-        </header>
-        <div class="body">
-        <p>Worldcast is a podcast listener for one person. A small Node.js server you run keeps your subscriptions and progress, and a web app or the Apple clients play from it.</p>
-        <p>The sideloaded iPhone and iPad build leaves out the Apple Watch app, which would use up another of your free app slots.</p>
-          <dl class="facts">
-          <div><dt>Runs on</dt><dd>iPhone, iPad, Apple Watch, Vision Pro</dd></div>
-          <div><dt>Needs</dt><dd>Your own Worldcast server (Node.js)</dd></div>
-          </dl>
-          <ul class="links"><li><a href="https://github.com/illixion/worldcast">Source on GitHub</a></li></ul>
-        </div>
-      </article>
-    </section>
-
-    <section class="sideload" id="sideload" aria-labelledby="h-sideload">
-      <div class="cat-head">
-        <h2 id="h-sideload">Sideloading</h2>
-        <p>Install the iPhone and iPad apps without the App Store.</p>
-      </div>
-      <div class="body">
-        <div class="actions">
-          <a class="btn" href="altstore://source?url=https://apps.illixion.com/source.json">Add to AltStore</a>
-          <a class="btn alt" href="sidestore://source?url=https://apps.illixion.com/source.json">Add to SideStore</a>
-        </div>
-        <p class="url">Or paste this address into the Sources tab: <code>https://apps.illixion.com/source.json</code> <button class="btn alt small" type="button" data-copy="https://apps.illixion.com/source.json">Copy</button></p>
-        <ol>
-          <li>Install <a href="https://altstore.io">AltStore</a> or <a href="https://sidestore.io">SideStore</a>. Both read the same source.</li>
-          <li>Add the source with the buttons above. They open the app on an iPhone.</li>
-          <li>Tap Free on the app you want.</li>
-        </ol>
-        <p>The apps are re-signed on your device with your own Apple ID. A free Apple ID allows three active sideloaded apps, and each has to be refreshed every seven days: AltStore does that through AltServer on a Mac or PC on your network, SideStore on the device. These builds need iOS 26 or later, and Worldcast needs 26.5.</p>
-        <p>This site is a static page and a JSON file, with no accounts and no analytics.</p>
-      </div>
-    </section>
-
-    <footer>
-      <p><a href="https://github.com/illixion">github.com/illixion</a></p>
-      <p>Set in Bricolage Grotesque and Source Serif 4, both under the SIL Open Font License.</p>
-    </footer>
-  </main>
-</div>
+  <section class="glass">
+    <h2>How it works</h2>
+    <ol>
+      <li>Install <a href="https://altstore.io">AltStore</a> or <a href="https://sidestore.io">SideStore</a>. Both read the same source.</li>
+      <li>Add the source with the buttons above. They open the app on an iPhone or iPad.</li>
+      <li>Tap Free on the app you want.</li>
+    </ol>
+    <p class="muted">The apps are re-signed on your device with your own Apple ID. A free Apple ID allows three active sideloaded apps, each refreshed every seven days: AltStore does that through AltServer on a computer on your network, SideStore on the device. This page is static, with no accounts and no analytics.</p>
+  </section>
+</main>
 <script src="copy.js"></script>
 </body>
 </html>

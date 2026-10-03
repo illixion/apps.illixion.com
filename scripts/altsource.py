@@ -5,7 +5,7 @@
     altsource.py release <slug> [--notes TEXT] [--dry-run]
                                          upload the built IPA to a GitHub release on this repo,
                                          record it in catalog.json, regenerate the site
-    altsource.py site                    regenerate Website/source.json and Website/index.html
+    altsource.py site                    regenerate Website/source.json and the install page
 
 catalog.json is the one hand-edited file. Everything under Website/ that is not an icon or
 screenshot is generated from it.
@@ -173,56 +173,30 @@ def esc(x):
     return html.escape(x, quote=True)
 
 
-def app_html(a, source_url):
-    v = a["versions"][0] if a["versions"] else None
-    facts = [("Runs on", ", ".join(a["platforms"])), ("Needs", a["requires"])]
-    if v:
-        facts.append(("Sideload build", f"iPhone and iPad, iOS {v['minOSVersion']} or later, version {v['version']}, {v['size'] / 1_000_000:.1f} MB"))
-    dl = "\n".join(f"          <div><dt>{esc(k)}</dt><dd>{esc(t)}</dd></div>" for k, t in facts)
-    paras = "\n".join(f"        <p>{esc(t)}</p>" for t in a["explainer"])
-    links = []
-    if v:
-        links.append('<li><a class="primary" href="#sideload">Install by sideloading</a></li>')
-    for key, label in (("appstore", "App Store"), ("testflight", "TestFlight"), ("github", "Source on GitHub"), ("site", "Website")):
-        if a["links"].get(key):
-            links.append(f'<li><a href="{esc(a["links"][key])}">{label}</a></li>')
-    return f"""      <article class="app" id="{a['slug']}">
-        <header>
-          <img src="{esc(a['icon'])}" width="72" height="72" alt="">
+def app_html(a):
+    v = a["versions"][0]
+    detail = f"Version {v['version']}, iOS {v['minOSVersion']} or later, {v['size'] / 1_000_000:.1f} MB"
+    gh = a["links"].get("github")
+    src = f' <a href="{esc(gh)}">Source</a>' if gh else ""
+    return f"""      <li>
+        <img src="{esc(a['icon'])}" width="48" height="48" alt="">
+        <div>
           <h3>{esc(a['name'])}</h3>
-          <p class="tag">{esc(a['subtitle'])}</p>
-        </header>
-        <div class="body">
-{paras}
-          <dl class="facts">
-{dl}
-          </dl>
-          <ul class="links">{''.join(links)}</ul>
+          <p>{esc(a['subtitle'])}</p>
+          <p class="muted">{esc(detail)}.{src}</p>
         </div>
-      </article>"""
+      </li>"""
 
 
 def page(cat):
     s = cat["source"]
     url = f"{s['website'].rstrip('/')}/source.json"
-    rail, sections = [], []
-    for c in cat["categories"]:
-        apps = [a for a in cat["apps"] if a["category"] == c["slug"]]
-        if not apps:
-            continue
-        rail.append(f'<li><a href="#{c["slug"]}">{esc(c["name"])}</a></li>')
-        body = "\n".join(app_html(a, url) for a in apps)
-        sections.append(f"""    <section class="category" id="{c['slug']}" aria-labelledby="h-{c['slug']}">
-      <div class="cat-head">
-        <h2 id="h-{c['slug']}">{esc(c['name'])}</h2>
-        <p>{esc(c['blurb'])}</p>
-      </div>
-{body}
-    </section>""")
+    released = [a for a in cat["apps"] if a["versions"]]
+    apps = "\n".join(app_html(a) for a in released) or \
+        '      <li class="muted">No builds are published yet.</li>'
     t = open(os.path.join(ROOT, "scripts", "index.template.html")).read()
     for k, val in {"SOURCE_URL": url, "TITLE": esc(s["name"]), "TAGLINE": esc(s["tagline"]),
-                   "GITHUB": esc(s["github"]), "RAIL": "\n".join(rail),
-                   "CATEGORIES": "\n".join(sections)}.items():
+                   "ABOUT": esc(s["about"]), "APPS": apps}.items():
         t = t.replace("{{" + k + "}}", val)
     return t
 

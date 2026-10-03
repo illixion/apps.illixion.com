@@ -1,7 +1,7 @@
 # apps.illixion.com
 
-The AltStore / SideStore source for Illixion's iPhone and iPad apps, and the static page that
-introduces it. Cloudflare Pages serves `Website/` as-is; IPAs live in this repo's GitHub releases.
+The AltStore / SideStore source for Illixion's iPhone and iPad apps, and a one-page installer for
+it. What each app does lives on [illixion.com](https://illixion.com/#apps) and in each app's repo. Cloudflare Pages serves `Website/` as-is; IPAs live in this repo's GitHub releases.
 
 `catalog.json` is the only file edited by hand. `Website/source.json` and `Website/index.html` are
 generated from it. One source file serves both AltStore and SideStore.

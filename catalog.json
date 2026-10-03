@@ -10,7 +10,8 @@
     "icon": "icons/convolution.png",
     "tintColor": "#C8935A",
     "github": "https://github.com/illixion",
-    "tagline": "Apps for Apple Vision Pro, iPhone, iPad, Mac and Apple Watch, made by one developer."
+    "tagline": "Install Ixion's iPhone and iPad apps with AltStore or SideStore.",
+    "about": "https://illixion.com/#apps"
   },
   "apps": [
     {
@@ -29,19 +30,6 @@
         "scheme": "Hypnos"
       },
       "versions": [],
-      "category": "media",
-      "platforms": [
-        "Vision Pro",
-        "iPhone",
-        "iPad",
-        "Apple TV",
-        "Mac"
-      ],
-      "requires": "Photos library, or a Stash, Nextcloud or Jellyfin server",
-      "explainer": [
-        "Convolution is one library for pictures, video and films. Point it at your Photos library, a Stash, Nextcloud or Jellyfin server, or a folder of local files, and browse them in a grid that keeps each image's real proportions.",
-        "Films play with their object audio intact, so overhead sounds stay overhead and move with your head instead of being folded down to 7.1. On Vision Pro it also turns flat photos and videos into 3D. That part needs the headset; the iPhone and iPad app is the library, viewer and film player."
-      ],
       "links": {
         "github": "https://github.com/illixion/Convolution"
       }
@@ -60,18 +48,6 @@
         "scheme": "LongwaveiOS"
       },
       "versions": [],
-      "category": "remote",
-      "platforms": [
-        "Vision Pro",
-        "iPhone",
-        "iPad",
-        "Mac"
-      ],
-      "requires": "A computer to connect to, on your network or over a VPN",
-      "explainer": [
-        "Longwave connects you to your computers. It does VNC remote desktop, streams games from a Sunshine or GameStream host, and gives you an SSH terminal, with audio coming along.",
-        "On Vision Pro the desktops and terminals sit in the room as windows you place where you want them. On iPhone and iPad it is the same set of connections on a flat screen."
-      ],
       "links": {
         "github": "https://github.com/illixion/Longwave",
         "site": "https://longwave.pro"
@@ -92,39 +68,10 @@
         "stripWatch": true
       },
       "versions": [],
-      "category": "listening",
-      "platforms": [
-        "iPhone",
-        "iPad",
-        "Apple Watch",
-        "Vision Pro"
-      ],
-      "requires": "Your own Worldcast server (Node.js)",
-      "explainer": [
-        "Worldcast is a podcast listener for one person. A small Node.js server you run keeps your subscriptions and progress, and a web app or the Apple clients play from it.",
-        "The sideloaded iPhone and iPad build leaves out the Apple Watch app, which would use up another of your free app slots."
-      ],
       "links": {
         "github": "https://github.com/illixion/worldcast"
       }
     }
   ],
-  "news": [],
-  "categories": [
-    {
-      "slug": "media",
-      "name": "Media",
-      "blurb": "Browse, view and play your own photos, video and films."
-    },
-    {
-      "slug": "remote",
-      "name": "Remote and streaming",
-      "blurb": "Reach your computers and servers from wherever you are."
-    },
-    {
-      "slug": "listening",
-      "name": "Listening",
-      "blurb": "Audio you own, on every screen you have."
-    }
-  ]
+  "news": []
 }
