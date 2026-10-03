@@ -11,7 +11,7 @@ generated from it. One source file serves both AltStore and SideStore.
 ```sh
 scripts/altsource.py build convolution          # unsigned archive -> dist/convolution-<ver>-<build>.ipa
 scripts/altsource.py release convolution --notes "What changed"   # --dry-run to preview
-git add -A && git commit                        # then push; Pages redeploys
+git add -A && git commit && git push            # Pages redeploys
 ```
 
 `build` pins the bundle id to the one in the catalog and refuses an IPA that embeds extensions or a
@@ -20,11 +20,9 @@ Watch app, because each one costs a free Apple ID another App ID. Bump the app's
 
 ## Deploy
 
-```sh
-npx wrangler pages deploy Website --project-name=apps-illixion
-```
-
-Then add `apps.illixion.com` under the project's Custom domains. No build command.
+Cloudflare Pages builds from this repo on every push to `main`: no build command, output
+directory `Website`, custom domain `apps.illixion.com`. A release is therefore `release` plus a
+commit and push; the IPA itself is already on GitHub by then.
 
 ## Adding an app
 
