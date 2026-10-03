@@ -169,28 +169,62 @@ def source_json(cat):
     }
 
 
+def esc(x):
+    return html.escape(x, quote=True)
+
+
+def app_html(a, source_url):
+    v = a["versions"][0] if a["versions"] else None
+    facts = [("Runs on", ", ".join(a["platforms"])), ("Needs", a["requires"])]
+    if v:
+        facts.append(("Sideload build", f"iPhone and iPad, iOS {v['minOSVersion']} or later, version {v['version']}, {v['size'] / 1_000_000:.1f} MB"))
+    dl = "\n".join(f"          <div><dt>{esc(k)}</dt><dd>{esc(t)}</dd></div>" for k, t in facts)
+    paras = "\n".join(f"        <p>{esc(t)}</p>" for t in a["explainer"])
+    links = []
+    if v:
+        links.append('<li><a class="primary" href="#sideload">Install by sideloading</a></li>')
+    for key, label in (("appstore", "App Store"), ("testflight", "TestFlight"), ("github", "Source on GitHub"), ("site", "Website")):
+        if a["links"].get(key):
+            links.append(f'<li><a href="{esc(a["links"][key])}">{label}</a></li>')
+    return f"""      <article class="app" id="{a['slug']}">
+        <header>
+          <img src="{esc(a['icon'])}" width="72" height="72" alt="">
+          <h3>{esc(a['name'])}</h3>
+          <p class="tag">{esc(a['subtitle'])}</p>
+        </header>
+        <div class="body">
+{paras}
+          <dl class="facts">
+{dl}
+          </dl>
+          <ul class="links">{''.join(links)}</ul>
+        </div>
+      </article>"""
+
+
 def page(cat):
     s = cat["source"]
     url = f"{s['website'].rstrip('/')}/source.json"
-    cards = []
-    for a in cat["apps"]:
-        if not a["versions"]:
+    rail, sections = [], []
+    for c in cat["categories"]:
+        apps = [a for a in cat["apps"] if a["category"] == c["slug"]]
+        if not apps:
             continue
-        v = a["versions"][0]
-        mb = v["size"] / 1_000_000
-        link = f'<a href="{html.escape(a["site"])}">Project page</a>' if a.get("site") else ""
-        cards.append(f"""      <article class="app" style="--tint: {a['tintColor']}">
-        <img src="{html.escape(a['icon'])}" width="72" height="72" alt="">
-        <div>
-          <h3>{html.escape(a['name'])}</h3>
-          <p class="sub">{html.escape(a['subtitle'])}</p>
-          <p>{html.escape(a['localizedDescription'])}</p>
-          <p class="meta">Version {html.escape(v['version'])} · {mb:.1f} MB · iOS {html.escape(v['minOSVersion'])} or later {('· ' + link) if link else ''}</p>
-        </div>
-      </article>""")
+        rail.append(f'<li><a href="#{c["slug"]}">{esc(c["name"])}</a></li>')
+        body = "\n".join(app_html(a, url) for a in apps)
+        sections.append(f"""    <section class="category" id="{c['slug']}" aria-labelledby="h-{c['slug']}">
+      <div class="cat-head">
+        <h2 id="h-{c['slug']}">{esc(c['name'])}</h2>
+        <p>{esc(c['blurb'])}</p>
+      </div>
+{body}
+    </section>""")
     t = open(os.path.join(ROOT, "scripts", "index.template.html")).read()
-    return (t.replace("{{SOURCE_URL}}", url).replace("{{TITLE}}", html.escape(s["name"]))
-             .replace("{{APPS}}", "\n".join(cards)))
+    for k, val in {"SOURCE_URL": url, "TITLE": esc(s["name"]), "TAGLINE": esc(s["tagline"]),
+                   "GITHUB": esc(s["github"]), "RAIL": "\n".join(rail),
+                   "CATEGORIES": "\n".join(sections)}.items():
+        t = t.replace("{{" + k + "}}", val)
+    return t
 
 
 def write_site(cat, site):

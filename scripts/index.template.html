@@ -4,45 +4,58 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>{{TITLE}}</title>
-  <meta name="description" content="Install Convolution, Longwave and Worldcast on iPhone and iPad with AltStore or SideStore.">
+  <meta name="description" content="{{TAGLINE}}">
+  <meta name="color-scheme" content="light dark">
   <link rel="icon" href="icons/convolution.png">
+  <link rel="preload" href="fonts/bricolage.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-<main>
-  <h1>{{TITLE}}</h1>
-  <p class="lede">iPhone and iPad apps that are not on the App Store yet. Add this source to AltStore or SideStore and install them from there.</p>
+<a class="skip" href="#apps">Skip to the apps</a>
+<div class="shell">
+  <nav class="rail" aria-label="Categories">
+    <p class="mark"><a href="./">Illixion Apps</a></p>
+    <ul>
+{{RAIL}}
+      <li><a href="#sideload">Sideloading</a></li>
+    </ul>
+  </nav>
 
-  <div class="actions">
-    <a class="btn" href="altstore://source?url={{SOURCE_URL}}">Add to AltStore</a>
-    <a class="btn alt" href="sidestore://source?url={{SOURCE_URL}}">Add to SideStore</a>
-  </div>
-  <div class="url">
-    <code>{{SOURCE_URL}}</code>
-    <button class="btn alt" type="button" data-copy="{{SOURCE_URL}}">Copy</button>
-  </div>
+  <main id="apps">
+    <header class="intro">
+      <h1>{{TAGLINE}}</h1>
+      <p>The code for every app here is public on GitHub. Most are not on the App Store yet, so the iPhone and iPad versions install through AltStore or SideStore.</p>
+    </header>
 
-  <h2>Apps</h2>
-  <section>
-{{APPS}}
-  </section>
+{{CATEGORIES}}
 
-  <h2>How it works</h2>
-  <ol>
-    <li>Install <a href="https://altstore.io">AltStore</a> or <a href="https://sidestore.io">SideStore</a>. Both read the same source.</li>
-    <li>Open the buttons above on your iPhone, or paste the source address into the app's Sources tab.</li>
-    <li>Tap Free on the app you want.</li>
-  </ol>
+    <section class="sideload" id="sideload" aria-labelledby="h-sideload">
+      <div class="cat-head">
+        <h2 id="h-sideload">Sideloading</h2>
+        <p>Install the iPhone and iPad apps without the App Store.</p>
+      </div>
+      <div class="body">
+        <div class="actions">
+          <a class="btn" href="altstore://source?url={{SOURCE_URL}}">Add to AltStore</a>
+          <a class="btn alt" href="sidestore://source?url={{SOURCE_URL}}">Add to SideStore</a>
+        </div>
+        <p class="url">Or paste this address into the Sources tab: <code>{{SOURCE_URL}}</code> <button class="btn alt small" type="button" data-copy="{{SOURCE_URL}}">Copy</button></p>
+        <ol>
+          <li>Install <a href="https://altstore.io">AltStore</a> or <a href="https://sidestore.io">SideStore</a>. Both read the same source.</li>
+          <li>Add the source with the buttons above. They open the app on an iPhone.</li>
+          <li>Tap Free on the app you want.</li>
+        </ol>
+        <p>The apps are re-signed on your device with your own Apple ID. A free Apple ID allows three active sideloaded apps, and each has to be refreshed every seven days: AltStore does that through AltServer on a Mac or PC on your network, SideStore on the device. These builds need iOS 26 or later, and Worldcast needs 26.5.</p>
+        <p>This site is a static page and a JSON file, with no accounts and no analytics.</p>
+      </div>
+    </section>
 
-  <h2>Good to know</h2>
-  <ul>
-    <li>These builds are re-signed on your device with your own Apple ID. A free Apple ID allows three active sideloaded apps, and each one has to be refreshed every seven days. AltStore refreshes through AltServer on a Mac or PC on your network, SideStore on the device itself.</li>
-    <li>The apps need iOS 26 or later.</li>
-    <li>This site is a static page and a JSON file. It has no accounts and no analytics.</li>
-  </ul>
-
-  <footer>Updates appear in the app list on their own. The Mac and Apple TV builds are not in this source.</footer>
-</main>
+    <footer>
+      <p><a href="{{GITHUB}}">github.com/illixion</a></p>
+      <p>Set in Bricolage Grotesque and Source Serif 4, both under the SIL Open Font License.</p>
+    </footer>
+  </main>
+</div>
 <script src="copy.js"></script>
 </body>
 </html>
