@@ -1,0 +1,12 @@
+{
+  "name": "Illixion Apps",
+  "identifier": "com.illixion.apps",
+  "subtitle": "iPhone and iPad apps by Illixion",
+  "description": "Apps by Illixion that are not on the App Store yet: Convolution, Longwave and Worldcast. Add this source to AltStore or SideStore to install and update them.",
+  "iconURL": "https://apps.illixion.com/icons/convolution.png",
+  "website": "https://apps.illixion.com",
+  "tintColor": "#C8935A",
+  "featuredApps": [],
+  "apps": [],
+  "news": []
+}

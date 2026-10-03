@@ -1,0 +1,55 @@
+{
+  "source": {
+    "name": "Illixion Apps",
+    "identifier": "com.illixion.apps",
+    "subtitle": "iPhone and iPad apps by Illixion",
+    "description": "Apps by Illixion that are not on the App Store yet: Convolution, Longwave and Worldcast. Add this source to AltStore or SideStore to install and update them.",
+    "developerName": "Illixion",
+    "website": "https://apps.illixion.com",
+    "repo": "illixion/apps.illixion.com",
+    "icon": "icons/convolution.png",
+    "tintColor": "#C8935A"
+  },
+  "apps": [
+    {
+      "slug": "convolution",
+      "name": "Convolution",
+      "bundleIdentifier": "com.illixion.hypnos",
+      "subtitle": "Photo, video and film library",
+      "localizedDescription": "Browse your Photos library, a Stash, Nextcloud or Jellyfin server, or local files, and play films with real object audio. The 2D-to-3D conversion features need Apple Vision Pro; on iPhone and iPad you get the library, viewer and film player.",
+      "tintColor": "#C8935A",
+      "icon": "icons/convolution.png",
+      "screenshots": ["screenshots/convolution-1.jpg"],
+      "site": "https://github.com/illixion/Convolution",
+      "build": {"project": "Projects/Hypnos/Hypnos/Hypnos.xcodeproj", "scheme": "Hypnos"},
+      "versions": []
+    },
+    {
+      "slug": "longwave",
+      "name": "Longwave",
+      "bundleIdentifier": "pro.longwave.ios",
+      "subtitle": "Remote desktop and game streaming",
+      "localizedDescription": "Connect to your computers from iPhone and iPad: VNC remote desktop, game streaming from a Sunshine or GameStream host, and an SSH terminal. This build is the iPhone and iPad app only; it needs a host on your network or reachable over a VPN.",
+      "tintColor": "#B58BE0",
+      "icon": "icons/longwave.png",
+      "screenshots": [],
+      "site": "https://longwave.pro",
+      "build": {"project": "Projects/Longwave/Longwave.xcodeproj", "scheme": "LongwaveiOS"},
+      "versions": []
+    },
+    {
+      "slug": "worldcast",
+      "name": "Worldcast",
+      "bundleIdentifier": "com.illixion.worldcast.Worldcast",
+      "subtitle": "Single-user podcast listener",
+      "localizedDescription": "The iPhone and iPad client for a Worldcast server, a self-hosted podcast listener for one person. It needs your own Worldcast server to sign in to. The Apple Watch app is not part of this build.",
+      "tintColor": "#FF6B35",
+      "icon": "icons/worldcast.png",
+      "screenshots": [],
+      "site": "https://github.com/illixion/worldcast",
+      "build": {"project": "Projects/worldcast/Worldcast/Worldcast.xcodeproj", "scheme": "Worldcast", "stripWatch": true},
+      "versions": []
+    }
+  ],
+  "news": []
+}
