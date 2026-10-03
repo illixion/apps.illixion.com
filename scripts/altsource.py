@@ -1,22 +1,24 @@
 #!/usr/bin/env python3
-"""Build, release and publish the apps.illixion.com AltStore / SideStore source.
+"""Keep the apps.illixion.com AltStore / SideStore source in step with each app's releases.
 
-    altsource.py build <slug>            archive the app unsigned, package dist/<file>.ipa
-    altsource.py release <slug> [--notes TEXT] [--dry-run]
-                                         upload the built IPA to a GitHub release on this repo,
-                                         record it in catalog.json, regenerate the site
-    altsource.py site                    regenerate Website/source.json and the install page
+    altsource.py sync [slug] [--dry-run]  add each app's newest GitHub release to catalog.json,
+                                          then regenerate the site
+    altsource.py site                     regenerate Website/source.json and the install page
+
+Each app's own CI builds the iPhone/iPad IPA and attaches it to every release under one fixed
+name (catalog.json: release.asset). This repo hosts no binaries: a version's downloadURL is
+that asset under its release's tag, which never changes, so the size and SHA-256 recorded
+here stay true. releases/latest/download/<asset> is the moving link for people, not for the
+source.
 
 catalog.json is the one hand-edited file. Everything under Website/ that is not an icon or
 screenshot is generated from it.
 """
-import argparse, datetime, hashlib, html, json, os, plistlib, shutil, subprocess, sys, tempfile
+import argparse, hashlib, html, io, json, os, plistlib, re, subprocess, sys, urllib.request, zipfile
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 CATALOG = os.path.join(ROOT, "catalog.json")
-DIST = os.path.join(ROOT, "dist")
 SITE = os.path.join(ROOT, "Website")
-HOME = os.path.expanduser("~")
 
 
 def load():
@@ -37,102 +39,87 @@ def app_for(cat, slug):
     sys.exit(f"no app '{slug}' in catalog.json")
 
 
-def run(cmd, **kw):
-    print("+", " ".join(cmd), flush=True)
-    return subprocess.run(cmd, check=True, **kw)
+# ---------------------------------------------------------------- sync
+
+def newest_release(repo, asset):
+    """The newest published release of repo that carries asset, and that asset."""
+    out = subprocess.run(["gh", "api", f"repos/{repo}/releases?per_page=30"],
+                         check=True, capture_output=True, text=True).stdout
+    for rel in json.loads(out):
+        if rel["draft"] or rel["prerelease"]:
+            continue
+        for a in rel["assets"]:
+            if a["name"] == asset:
+                return rel, a
+    return None, None
 
 
-# ---------------------------------------------------------------- build
+def inspect_ipa(data):
+    """Info.plist of the IPA's app, and any extension or Watch app bundles it embeds."""
+    z = zipfile.ZipFile(io.BytesIO(data))
+    names = z.namelist()
+    plists = [n for n in names if re.fullmatch(r"Payload/[^/]+\.app/Info\.plist", n)]
+    if len(plists) != 1:
+        sys.exit(f"expected one app in the IPA, found {len(plists)}")
+    info = plistlib.loads(z.read(plists[0]))
+    embedded = sorted({m.group(1) for n in names
+                       if (m := re.match(r"Payload/[^/]+\.app/(PlugIns|Watch|Extensions)/", n))})
+    return info, embedded
 
-def build(slug):
-    cat = load()
-    app = app_for(cat, slug)
-    b = app["build"]
-    work = os.path.join(DIST, "work", slug)
-    shutil.rmtree(work, ignore_errors=True)
-    os.makedirs(work)
-    archive = os.path.join(work, "a.xcarchive")
-    cmd = ["xcodebuild", "-project", os.path.join(HOME, b["project"]), "-scheme", b["scheme"],
-           "-configuration", "Release", "-destination", "generic/platform=iOS",
-           "-archivePath", archive, "archive",
-           "CODE_SIGNING_ALLOWED=NO", "CODE_SIGNING_REQUIRED=NO", "CODE_SIGN_IDENTITY="]
-    # A local, gitignored signing override can rename the bundle id on the author's machine;
-    # pin it so the IPA always carries the id the catalog advertises.
-    cmd.append(f"PRODUCT_BUNDLE_IDENTIFIER={app['bundleIdentifier']}")
-    with open(os.path.join(work, "log.txt"), "w") as log:
-        print(f"archiving {slug} (log: {work}/log.txt)", flush=True)
-        r = subprocess.run(cmd, stdout=log, stderr=subprocess.STDOUT)
-    if r.returncode != 0:
-        sys.exit(f"xcodebuild failed ({r.returncode}); see {work}/log.txt")
 
-    apps = os.path.join(archive, "Products", "Applications")
-    bundle = [d for d in os.listdir(apps) if d.endswith(".app")][0]
-    src = os.path.join(apps, bundle)
-    if b.get("stripWatch"):
-        shutil.rmtree(os.path.join(src, "Watch"), ignore_errors=True)
-    with open(os.path.join(src, "Info.plist"), "rb") as f:
-        info = plistlib.load(f)
+def sync_app(app, dry):
+    r = app["release"]
+    rel, asset = newest_release(r["repo"], r["asset"])
+    if not rel:
+        print(f"{app['slug']}: no release of {r['repo']} has {r['asset']} yet")
+        return False
+    url = asset["browser_download_url"]
+    if any(v["downloadURL"] == url for v in app["versions"]):
+        print(f"{app['slug']}: up to date ({rel['tag_name']})")
+        return False
+
+    print(f"{app['slug']}: downloading {url}", flush=True)
+    with urllib.request.urlopen(url) as resp:
+        data = resp.read()
+    sha = hashlib.sha256(data).hexdigest()
+    if asset.get("digest") and asset["digest"] != f"sha256:{sha}":
+        sys.exit(f"{app['slug']}: download does not match GitHub's digest {asset['digest']}")
+    info, embedded = inspect_ipa(data)
     if info["CFBundleIdentifier"] != app["bundleIdentifier"]:
-        sys.exit(f"bundle id is {info['CFBundleIdentifier']}, catalog says {app['bundleIdentifier']}")
-    extras = [p for p in ("PlugIns", "Watch", "Extensions") if os.path.isdir(os.path.join(src, p))]
+        sys.exit(f"{app['slug']}: IPA is {info['CFBundleIdentifier']}, catalog says {app['bundleIdentifier']}")
+    if embedded:
+        sys.exit(f"{app['slug']}: IPA embeds {embedded}; the source ships extension-free builds")
+    if "UIDeviceFamily" in info and not {1, 2} & set(info["UIDeviceFamily"]):
+        sys.exit(f"{app['slug']}: IPA is not an iPhone or iPad build (UIDeviceFamily {info['UIDeviceFamily']})")
     version, build_no = info["CFBundleShortVersionString"], info["CFBundleVersion"]
-    name = f"{slug}-{version}-{build_no}.ipa"
+    # AltStore offers an update only when the build grows.
+    if app["versions"] and int(build_no) <= int(app["versions"][0]["buildVersion"]):
+        sys.exit(f"{app['slug']}: build {build_no} of {rel['tag_name']} is not newer than "
+                 f"{app['versions'][0]['buildVersion']}")
 
-    payload = os.path.join(work, "Payload")
-    os.makedirs(payload)
-    shutil.copytree(src, os.path.join(payload, bundle), symlinks=True)
-    out = os.path.join(DIST, name)
-    if os.path.exists(out):
-        os.remove(out)
-    run(["zip", "-qry", out, "Payload"], cwd=work)
-
-    side = {
-        "slug": slug, "file": name, "version": version, "buildVersion": build_no,
-        "minOSVersion": info.get("MinimumOSVersion", ""),
-        "size": os.path.getsize(out),
-        "sha256": hashlib.sha256(open(out, "rb").read()).hexdigest(),
-        "privacy": {k: v for k, v in sorted(info.items()) if k.endswith("UsageDescription")},
-        "embeddedBundles": extras,
-    }
-    with open(os.path.join(DIST, f"{slug}.json"), "w") as f:
-        json.dump(side, f, indent=2)
-    print(json.dumps(side, indent=2))
-
-
-# ---------------------------------------------------------------- release
-
-def release(slug, notes, dry):
-    cat = load()
-    app = app_for(cat, slug)
-    with open(os.path.join(DIST, f"{slug}.json")) as f:
-        side = json.load(f)
-    if side["embeddedBundles"]:
-        sys.exit(f"{slug}: IPA still embeds {side['embeddedBundles']}; the source ships extension-free builds")
-    tag = f"{slug}-{side['version']}-{side['buildVersion']}"
-    repo = cat["source"]["repo"]
-    url = f"https://github.com/{repo}/releases/download/{tag}/{side['file']}"
-    if any(v["buildVersion"] == side["buildVersion"] and v["version"] == side["version"] for v in app["versions"]):
-        sys.exit(f"{tag} is already in catalog.json; bump the app's build number")
     entry = {
-        "version": side["version"], "buildVersion": side["buildVersion"],
-        "date": datetime.datetime.now(datetime.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
-        "localizedDescription": notes or f"{app['name']} {side['version']}",
-        "downloadURL": url, "size": side["size"], "sha256": side["sha256"],
-        "minOSVersion": side["minOSVersion"],
+        "version": version, "buildVersion": build_no,
+        "date": rel["published_at"],
+        "localizedDescription": f"Built from {rel['tag_name']}. What changed: {rel['html_url']}",
+        "downloadURL": url, "size": len(data), "sha256": sha,
+        "minOSVersion": info.get("MinimumOSVersion", ""),
     }
-    app["privacy"] = side["privacy"]
-    app["versions"].insert(0, entry)
+    print(f"{app['slug']}: {version} ({build_no}) from {rel['tag_name']}, {len(data) / 1e6:.1f} MB")
     if dry:
-        print("dry run; would release", tag, "->", url)
-        with tempfile.TemporaryDirectory() as t:
-            write_site(cat, os.path.join(t, "Website"))
-            print("generated source.json OK:", len(cat["apps"]), "apps")
-        return
-    run(["gh", "release", "create", tag, os.path.join(DIST, side["file"]), "--repo", repo,
-         "--title", f"{app['name']} {side['version']} ({side['buildVersion']})",
-         "--notes", entry["localizedDescription"], "--latest=false"])
-    save(cat)
-    write_site(cat, SITE)
+        return False
+    app["privacy"] = {k: v for k, v in sorted(info.items()) if k.endswith("UsageDescription")}
+    app["versions"].insert(0, entry)
+    return True
+
+
+def sync(slug, dry):
+    cat = load()
+    apps = [app_for(cat, slug)] if slug else cat["apps"]
+    changed = [a["slug"] for a in apps if sync_app(a, dry)]
+    if changed:
+        save(cat)
+        write_site(cat, SITE)
+        print("updated:", ", ".join(changed))
 
 
 # ---------------------------------------------------------------- site
@@ -213,17 +200,13 @@ def write_site(cat, site):
 def main():
     p = argparse.ArgumentParser()
     sub = p.add_subparsers(dest="cmd", required=True)
-    sub.add_parser("build").add_argument("slug")
-    r = sub.add_parser("release")
-    r.add_argument("slug")
-    r.add_argument("--notes")
-    r.add_argument("--dry-run", action="store_true")
+    y = sub.add_parser("sync")
+    y.add_argument("slug", nargs="?")
+    y.add_argument("--dry-run", action="store_true")
     sub.add_parser("site")
     a = p.parse_args()
-    if a.cmd == "build":
-        build(a.slug)
-    elif a.cmd == "release":
-        release(a.slug, a.notes, a.dry_run)
+    if a.cmd == "sync":
+        sync(a.slug, a.dry_run)
     else:
         write_site(load(), SITE)
 

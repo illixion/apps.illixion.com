@@ -6,7 +6,6 @@
     "description": "Apps by Illixion that are not on the App Store yet: Convolution, Longwave and Worldcast. Add this source to AltStore or SideStore to install and update them.",
     "developerName": "Illixion",
     "website": "https://apps.illixion.com",
-    "repo": "illixion/apps.illixion.com",
     "icon": "icons/convolution.png",
     "tintColor": "#C8935A",
     "github": "https://github.com/illixion",
@@ -25,9 +24,9 @@
       "screenshots": [
         "screenshots/convolution-1.jpg"
       ],
-      "build": {
-        "project": "Projects/Hypnos/Hypnos/Hypnos.xcodeproj",
-        "scheme": "Hypnos"
+      "release": {
+        "repo": "illixion/Convolution",
+        "asset": "Convolution-iOS-unsigned.ipa"
       },
       "versions": [],
       "links": {
@@ -43,9 +42,9 @@
       "tintColor": "#B58BE0",
       "icon": "icons/longwave.png",
       "screenshots": [],
-      "build": {
-        "project": "Projects/Longwave/Longwave.xcodeproj",
-        "scheme": "LongwaveiOS"
+      "release": {
+        "repo": "illixion/Longwave",
+        "asset": "Longwave-iOS-unsigned.ipa"
       },
       "versions": [],
       "links": {
@@ -62,10 +61,9 @@
       "tintColor": "#FF6B35",
       "icon": "icons/worldcast.png",
       "screenshots": [],
-      "build": {
-        "project": "Projects/worldcast/Worldcast/Worldcast.xcodeproj",
-        "scheme": "Worldcast",
-        "stripWatch": true
+      "release": {
+        "repo": "illixion/worldcast",
+        "asset": "Worldcast-iOS-unsigned.ipa"
       },
       "versions": [],
       "links": {
