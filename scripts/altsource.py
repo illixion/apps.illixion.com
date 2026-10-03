@@ -3,7 +3,11 @@
 
     altsource.py sync [slug] [--dry-run]  add each app's newest GitHub release to catalog.json,
                                           then regenerate the site
-    altsource.py site                     regenerate Website/source.json and the install page
+    altsource.py site                     regenerate both sources and the install page
+
+There are two sources: source.json for iPhone and iPad (AltStore or SideStore) and
+source-visionos.json for Apple Vision Pro (SideStore's visionOS port). A source format has no
+per-platform downloads, so each platform gets its own file.
 
 Each app's own CI builds the iPhone/iPad IPA and attaches it to every release under one fixed
 name (catalog.json: release.asset). This repo hosts no binaries: a version's downloadURL is
@@ -67,35 +71,58 @@ def inspect_ipa(data):
     return info, embedded
 
 
-def sync_app(app, dry):
-    r = app["release"]
-    rel, asset = newest_release(r["repo"], r["asset"])
+# An app has one track per source: its iPhone/iPad build (bundle id, versions and privacy at the
+# top level of the catalog entry) and, optionally, a visionOS build under "visionos" with its own.
+PLATFORMS = {"ios": "iPhone/iPad", "visionos": "visionOS"}
+
+
+def tracks(app):
+    yield "ios", app["release"]["asset"], app
+    if "visionos" in app:
+        yield "visionos", app["visionos"]["asset"], app["visionos"]
+
+
+def check_platform(platform, info):
+    """Why the IPA can't go in this platform's source, or None."""
+    sdk = info.get("DTPlatformName", "")
+    family = set(info.get("UIDeviceFamily", []))
+    if platform == "visionos":
+        return None if sdk == "xros" else f"not a visionOS build (DTPlatformName {sdk!r})"
+    if sdk == "xros" or (family and not {1, 2} & family):
+        return f"not an iPhone or iPad build (DTPlatformName {sdk!r}, UIDeviceFamily {sorted(family)})"
+    return None
+
+
+def sync_track(app, platform, asset_name, track, dry):
+    name = f"{app['slug']} ({PLATFORMS[platform]})"
+    repo = app["release"]["repo"]
+    rel, asset = newest_release(repo, asset_name)
     if not rel:
-        print(f"{app['slug']}: no release of {r['repo']} has {r['asset']} yet")
+        print(f"{name}: no release of {repo} has {asset_name} yet")
         return False
     url = asset["browser_download_url"]
-    if any(v["downloadURL"] == url for v in app["versions"]):
-        print(f"{app['slug']}: up to date ({rel['tag_name']})")
+    if any(v["downloadURL"] == url for v in track["versions"]):
+        print(f"{name}: up to date ({rel['tag_name']})")
         return False
 
-    print(f"{app['slug']}: downloading {url}", flush=True)
+    print(f"{name}: downloading {url}", flush=True)
     with urllib.request.urlopen(url) as resp:
         data = resp.read()
     sha = hashlib.sha256(data).hexdigest()
     if asset.get("digest") and asset["digest"] != f"sha256:{sha}":
-        sys.exit(f"{app['slug']}: download does not match GitHub's digest {asset['digest']}")
+        sys.exit(f"{name}: download does not match GitHub's digest {asset['digest']}")
     info, embedded = inspect_ipa(data)
-    if info["CFBundleIdentifier"] != app["bundleIdentifier"]:
-        sys.exit(f"{app['slug']}: IPA is {info['CFBundleIdentifier']}, catalog says {app['bundleIdentifier']}")
+    if info["CFBundleIdentifier"] != track["bundleIdentifier"]:
+        sys.exit(f"{name}: IPA is {info['CFBundleIdentifier']}, catalog says {track['bundleIdentifier']}")
     if embedded:
-        sys.exit(f"{app['slug']}: IPA embeds {embedded}; the source ships extension-free builds")
-    if "UIDeviceFamily" in info and not {1, 2} & set(info["UIDeviceFamily"]):
-        sys.exit(f"{app['slug']}: IPA is not an iPhone or iPad build (UIDeviceFamily {info['UIDeviceFamily']})")
+        sys.exit(f"{name}: IPA embeds {embedded}; the sources ship extension-free builds")
+    if why := check_platform(platform, info):
+        sys.exit(f"{name}: IPA is {why}")
     version, build_no = info["CFBundleShortVersionString"], info["CFBundleVersion"]
-    # AltStore offers an update only when the build grows.
-    if app["versions"] and int(build_no) <= int(app["versions"][0]["buildVersion"]):
-        sys.exit(f"{app['slug']}: build {build_no} of {rel['tag_name']} is not newer than "
-                 f"{app['versions'][0]['buildVersion']}")
+    # AltStore and SideStore offer an update only when the build grows.
+    if track["versions"] and int(build_no) <= int(track["versions"][0]["buildVersion"]):
+        sys.exit(f"{name}: build {build_no} of {rel['tag_name']} is not newer than "
+                 f"{track['versions'][0]['buildVersion']}")
 
     entry = {
         "version": version, "buildVersion": build_no,
@@ -104,18 +131,19 @@ def sync_app(app, dry):
         "downloadURL": url, "size": len(data), "sha256": sha,
         "minOSVersion": info.get("MinimumOSVersion", ""),
     }
-    print(f"{app['slug']}: {version} ({build_no}) from {rel['tag_name']}, {len(data) / 1e6:.1f} MB")
+    print(f"{name}: {version} ({build_no}) from {rel['tag_name']}, {len(data) / 1e6:.1f} MB")
     if dry:
         return False
-    app["privacy"] = {k: v for k, v in sorted(info.items()) if k.endswith("UsageDescription")}
-    app["versions"].insert(0, entry)
+    track["privacy"] = {k: v for k, v in sorted(info.items()) if k.endswith("UsageDescription")}
+    track["versions"].insert(0, entry)
     return True
 
 
 def sync(slug, dry):
     cat = load()
     apps = [app_for(cat, slug)] if slug else cat["apps"]
-    changed = [a["slug"] for a in apps if sync_app(a, dry)]
+    changed = [f"{a['slug']} ({PLATFORMS[p]})" for a in apps for p, asset, t in tracks(a)
+               if sync_track(a, p, asset, t, dry)]
     if changed:
         save(cat)
         write_site(cat, SITE)
@@ -124,28 +152,41 @@ def sync(slug, dry):
 
 # ---------------------------------------------------------------- site
 
-def source_json(cat):
-    s = cat["source"]
+SOURCE_FILES = {"ios": "source.json", "visionos": "source-visionos.json"}
+
+
+def source_meta(cat, platform):
+    """The source's own fields; the visionOS source overrides the shared ones it names."""
+    s = dict(cat["source"])
+    s.update(s.pop("visionos", {}) if platform == "visionos" else {})
+    s.pop("visionos", None)
+    return s
+
+
+def source_json(cat, platform="ios"):
+    s = source_meta(cat, platform)
     base = s["website"].rstrip("/")
     apps = []
     for a in cat["apps"]:
-        if not a["versions"]:
+        t = a if platform == "ios" else a.get("visionos")
+        if not t or not t["versions"]:
             continue
-        latest = a["versions"][0]
+        latest = t["versions"][0]
         d = {
-            "name": a["name"], "bundleIdentifier": a["bundleIdentifier"],
+            "name": a["name"], "bundleIdentifier": t["bundleIdentifier"],
             "developerName": s["developerName"], "subtitle": a["subtitle"],
-            "localizedDescription": a["localizedDescription"],
+            "localizedDescription": t.get("localizedDescription", a["localizedDescription"]),
             "iconURL": f"{base}/{a['icon']}", "tintColor": a["tintColor"],
-            "versions": a["versions"],
-            "appPermissions": {"entitlements": [], "privacy": a.get("privacy", {})},
+            "versions": t["versions"],
+            "appPermissions": {"entitlements": [], "privacy": t.get("privacy", {})},
             # Older clients read the newest version from the app itself.
             "version": latest["version"], "versionDate": latest["date"],
             "versionDescription": latest["localizedDescription"],
             "downloadURL": latest["downloadURL"], "size": latest["size"],
         }
-        if a.get("screenshots"):
-            d["screenshotURLs"] = [f"{base}/{p}" for p in a["screenshots"]]
+        shots = t.get("screenshots", a.get("screenshots") if platform == "ios" else None)
+        if shots:
+            d["screenshotURLs"] = [f"{base}/{p}" for p in shots]
         apps.append(d)
     return {
         "name": s["name"], "identifier": s["identifier"], "subtitle": s["subtitle"],
@@ -177,22 +218,28 @@ def app_html(a):
 
 def page(cat):
     s = cat["source"]
-    url = f"{s['website'].rstrip('/')}/source.json"
+    base = s["website"].rstrip("/")
     released = [a for a in cat["apps"] if a["versions"]]
     apps = "\n".join(app_html(a) for a in released) or \
         '      <li class="muted">No builds are published yet.</li>'
+    vision = [a["name"] for a in cat["apps"] if a.get("visionos", {}).get("versions")]
+    vision_apps = (" and ".join([", ".join(vision[:-1]), vision[-1]]) if len(vision) > 1 else
+                   (vision[0] if vision else "none are published yet"))
     t = open(os.path.join(ROOT, "scripts", "index.template.html")).read()
-    for k, val in {"SOURCE_URL": url, "TITLE": esc(s["name"]), "TAGLINE": esc(s["tagline"]),
-                   "ABOUT": esc(s["about"]), "APPS": apps}.items():
+    for k, val in {"SOURCE_URL": f"{base}/{SOURCE_FILES['ios']}",
+                   "VISION_SOURCE_URL": f"{base}/{SOURCE_FILES['visionos']}",
+                   "VISION_APPS": esc(vision_apps), "TITLE": esc(s["name"]),
+                   "TAGLINE": esc(s["tagline"]), "ABOUT": esc(s["about"]), "APPS": apps}.items():
         t = t.replace("{{" + k + "}}", val)
     return t
 
 
 def write_site(cat, site):
     os.makedirs(site, exist_ok=True)
-    with open(os.path.join(site, "source.json"), "w") as f:
-        json.dump(source_json(cat), f, indent=2, ensure_ascii=False)
-        f.write("\n")
+    for platform, filename in SOURCE_FILES.items():
+        with open(os.path.join(site, filename), "w") as f:
+            json.dump(source_json(cat, platform), f, indent=2, ensure_ascii=False)
+            f.write("\n")
     with open(os.path.join(site, "index.html"), "w") as f:
         f.write(page(cat))
 

@@ -1,0 +1,12 @@
+{
+  "name": "Illixion Apps for Vision Pro",
+  "identifier": "com.illixion.apps.visionos",
+  "subtitle": "Apple Vision Pro apps by Illixion",
+  "description": "Native Apple Vision Pro builds of Convolution and Longwave. Add this source to SideStore's visionOS port to install and update them. For iPhone and iPad, use the main source instead.",
+  "iconURL": "https://apps.illixion.com/icons/convolution.png",
+  "website": "https://apps.illixion.com",
+  "tintColor": "#C8935A",
+  "featuredApps": [],
+  "apps": [],
+  "news": []
+}

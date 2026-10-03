@@ -10,6 +10,11 @@
   Content-Type: application/json; charset=utf-8
   Cache-Control: public, max-age=300, must-revalidate
 
+/source-visionos.json
+  Access-Control-Allow-Origin: *
+  Content-Type: application/json; charset=utf-8
+  Cache-Control: public, max-age=300, must-revalidate
+
 /icons/*
   Cache-Control: public, max-age=86400
 

@@ -1,11 +1,13 @@
 # apps.illixion.com
 
-The AltStore / SideStore source for Illixion's iPhone and iPad apps, and a one-page installer for
-it. What each app does lives on [illixion.com](https://illixion.com/#apps) and in each app's repo. Cloudflare Pages serves `Website/` as-is. This repo holds no IPAs: each app's own CI attaches them to
+The AltStore / SideStore sources for Illixion's apps, and a one-page installer for them:
+`source.json` for iPhone and iPad, and `source-visionos.json` for Apple Vision Pro, which SideStore's
+visionOS port installs from. A source has no per-platform downloads, so each platform gets its own.
+What each app does lives on [illixion.com](https://illixion.com/#apps) and in each app's repo. Cloudflare Pages serves `Website/` as-is. This repo holds no IPAs: each app's own CI attaches them to
 that app's GitHub releases, and the source points there.
 
-`catalog.json` is the only file edited by hand. `Website/source.json` and `Website/index.html` are
-generated from it. One source file serves both AltStore and SideStore.
+`catalog.json` is the only file edited by hand. Both source files and `Website/index.html` are
+generated from it. Each source file serves both AltStore and SideStore.
 
 ## Shipping a build
 
@@ -21,8 +23,12 @@ scripts/altsource.py sync                # record it in catalog.json, regenerate
 git add -A && git commit && git push     # Pages redeploys
 ```
 
-`sync` downloads each new IPA once to read its version, size and SHA-256, and refuses one with the
-wrong bundle id, an embedded extension, no iPhone or iPad support, or a build number that isn't
+An app with a `visionos` entry in `catalog.json` also has a visionOS track: its own release asset
+(such as `Longwave-visionOS-unsigned.ipa`), bundle id, versions and description, which go to
+`source-visionos.json`. `sync` handles both tracks.
+
+It downloads each new IPA once to read its version, size and SHA-256, and refuses one with the
+wrong bundle id, an embedded extension, the other track's platform, or a build number that isn't
 higher than the last. A version's `downloadURL` is the asset under its release tag, which never
 changes. `https://github.com/<repo>/releases/latest/download/<asset>` always serves the newest build,
 which is the link to give people, but the source can't use it: its recorded size and hash would stop

@@ -10,7 +10,13 @@
     "tintColor": "#C8935A",
     "github": "https://github.com/illixion",
     "tagline": "Install Ixion's iPhone and iPad apps with AltStore or SideStore.",
-    "about": "https://illixion.com/#apps"
+    "about": "https://illixion.com/#apps",
+    "visionos": {
+      "name": "Illixion Apps for Vision Pro",
+      "identifier": "com.illixion.apps.visionos",
+      "subtitle": "Apple Vision Pro apps by Illixion",
+      "description": "Native Apple Vision Pro builds of Convolution and Longwave. Add this source to SideStore's visionOS port to install and update them. For iPhone and iPad, use the main source instead."
+    }
   },
   "apps": [
     {
@@ -27,6 +33,12 @@
       "release": {
         "repo": "illixion/Convolution",
         "asset": "Convolution-iOS-unsigned.ipa"
+      },
+      "visionos": {
+        "asset": "Convolution-visionOS-unsigned.ipa",
+        "bundleIdentifier": "com.illixion.hypnos",
+        "localizedDescription": "Browse your Photos library, a Stash, Nextcloud or Jellyfin server, or local files on Apple Vision Pro. Turn flat photos and videos into spatial 3D, open them in multiple windows, and play films with their sound objects placed around you.",
+        "versions": []
       },
       "versions": [
         {
@@ -62,6 +74,12 @@
       "release": {
         "repo": "illixion/Longwave",
         "asset": "Longwave-iOS-unsigned.ipa"
+      },
+      "visionos": {
+        "asset": "Longwave-visionOS-unsigned.ipa",
+        "bundleIdentifier": "pro.longwave.oss",
+        "localizedDescription": "Your computers in the headset: native Mac streaming, VNC remote desktop, Moonlight game streaming from a Sunshine host, system audio and an SSH terminal, as windows you place in the room. PCVR and the broadcast extension are not part of this build.",
+        "versions": []
       },
       "versions": [
         {
