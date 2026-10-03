@@ -69,4 +69,4 @@ footer p { margin: .25rem 0; }
   .rail li { margin: .45rem 0; }
   .intro { padding-top: 5rem; }
 }
-@media (max-width: 480px) { .facts div { grid-template-columns: 1fr; gap: 0; } }
+@media (max-width: 560px) { .facts div { grid-template-columns: 1fr; gap: 0; } }
