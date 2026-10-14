@@ -17,10 +17,11 @@
     <h1>Illixion Apps</h1>
     <p>Install Ixion&#x27;s iPhone, iPad and Vision Pro apps with Apparition, AltStore or SideStore. What each app does is on <a href="https://illixion.com/#apps">illixion.com</a>.</p>
     <p class="actions">
-      <a class="pill primary" href="altstore://source?url=https://apps.illixion.com/source.json">Add to AltStore</a>
+      <a class="pill primary" href="apparition://source?url=https://apps.illixion.com/source.json">Add to Apparition</a>
+      <a class="pill" href="altstore://source?url=https://apps.illixion.com/source.json">Add to AltStore</a>
       <a class="pill" href="sidestore://source?url=https://apps.illixion.com/source.json">Add to SideStore</a>
     </p>
-    <p class="muted">Or paste this address into the app's Sources tab. In Apparition, tap + in Browse and paste it there.</p>
+    <p class="muted">Or paste this address into the app's Sources tab, or Browse &gt; + in Apparition. Add to Apparition needs Apparition 0.1.1 or later.</p>
     <p class="url"><code>https://apps.illixion.com/source.json</code> <button class="pill small" type="button" data-copy="https://apps.illixion.com/source.json">Copy</button></p>
   </section>
 
@@ -67,6 +68,7 @@
     <h2>Apple Vision Pro</h2>
     <p>Native Vision Pro builds have their own source: none are published yet. AltStore and stock SideStore don't run on Vision Pro. Add it in <a href="https://apparition.illixion.com">Apparition</a> on the headset, or in SideStore's unofficial visionOS port.</p>
     <p class="actions">
+      <a class="pill primary" href="apparition://source?url=https://apps.illixion.com/source-visionos.json">Add to Apparition</a>
       <a class="pill" href="sidestore://source?url=https://apps.illixion.com/source-visionos.json">Add to SideStore</a>
     </p>
     <p class="url"><code>https://apps.illixion.com/source-visionos.json</code> <button class="pill small" type="button" data-copy="https://apps.illixion.com/source-visionos.json">Copy</button></p>
@@ -76,7 +78,7 @@
     <h2>How it works</h2>
     <ol>
       <li>Install <a href="https://apparition.illixion.com">Apparition</a>, <a href="https://altstore.io">AltStore</a> or <a href="https://sidestore.io">SideStore</a>. All three read the same source.</li>
-      <li>Add the source with the buttons above, which open AltStore or SideStore on an iPhone or iPad, or paste its address into Apparition.</li>
+      <li>Add the source with the buttons above, on the device where the app is installed.</li>
       <li>Tap Free on the app you want.</li>
     </ol>
     <p class="muted">The apps are re-signed on your device with your own Apple ID. A free Apple ID allows three active sideloaded apps, each refreshed every seven days: AltStore does that through AltServer on a computer on your network, SideStore on the device, and Apparition either way: through its desktop app, from anywhere over Tailscale, or on the device with LocalDevVPN. This page is static, with no accounts and no analytics.</p>
