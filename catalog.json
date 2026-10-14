@@ -3,19 +3,19 @@
     "name": "Illixion Apps",
     "identifier": "com.illixion.apps",
     "subtitle": "iPhone and iPad apps by Illixion",
-    "description": "Apps by Illixion that are not on the App Store yet: Convolution, Longwave and Worldcast. Add this source to AltStore or SideStore to install and update them.",
+    "description": "Apps by Illixion that are not on the App Store yet: Convolution, Longwave and Worldcast. Add this source to Apparition, AltStore or SideStore to install and update them.",
     "developerName": "Illixion",
     "website": "https://apps.illixion.com",
     "icon": "icons/convolution.png",
     "tintColor": "#C8935A",
     "github": "https://github.com/illixion",
-    "tagline": "Install Ixion's iPhone and iPad apps with AltStore or SideStore.",
+    "tagline": "Install Ixion's iPhone, iPad and Vision Pro apps with Apparition, AltStore or SideStore.",
     "about": "https://illixion.com/#apps",
     "visionos": {
       "name": "Illixion Apps for Vision Pro",
       "identifier": "com.illixion.apps.visionos",
       "subtitle": "Apple Vision Pro apps by Illixion",
-      "description": "Native Apple Vision Pro builds of Convolution and Longwave. Add this source to SideStore's visionOS port to install and update them. For iPhone and iPad, use the main source instead."
+      "description": "Native Apple Vision Pro builds of Convolution and Longwave. Add this source to Apparition on Vision Pro, or SideStore's visionOS port, to install and update them. For iPhone and iPad, use the main source instead."
     }
   },
   "apps": [

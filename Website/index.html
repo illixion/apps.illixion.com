@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>Illixion Apps</title>
-  <meta name="description" content="Install Ixion&#x27;s iPhone and iPad apps with AltStore or SideStore.">
+  <meta name="description" content="Install Ixion&#x27;s iPhone, iPad and Vision Pro apps with Apparition, AltStore or SideStore.">
   <meta name="color-scheme" content="light dark">
   <meta name="theme-color" content="#E9EBF5" media="(prefers-color-scheme: light)">
   <meta name="theme-color" content="#0E0F1A" media="(prefers-color-scheme: dark)">
@@ -15,13 +15,22 @@
 <main>
   <section class="glass">
     <h1>Illixion Apps</h1>
-    <p>Install Ixion&#x27;s iPhone and iPad apps with AltStore or SideStore. What each app does is on <a href="https://illixion.com/#apps">illixion.com</a>.</p>
+    <p>Install Ixion&#x27;s iPhone, iPad and Vision Pro apps with Apparition, AltStore or SideStore. What each app does is on <a href="https://illixion.com/#apps">illixion.com</a>.</p>
     <p class="actions">
       <a class="pill primary" href="altstore://source?url=https://apps.illixion.com/source.json">Add to AltStore</a>
       <a class="pill" href="sidestore://source?url=https://apps.illixion.com/source.json">Add to SideStore</a>
     </p>
-    <p class="muted">Or paste this address into the app's Sources tab:</p>
+    <p class="muted">Or paste this address into the app's Sources tab. In Apparition, tap + in Browse and paste it there.</p>
     <p class="url"><code>https://apps.illixion.com/source.json</code> <button class="pill small" type="button" data-copy="https://apps.illixion.com/source.json">Copy</button></p>
+  </section>
+
+  <section class="glass app-promo">
+    <img src="icons/apparition.png" width="64" height="64" alt="">
+    <div>
+      <h2>New: Apparition</h2>
+      <p>My own sideloader, which runs on the device itself: on Vision Pro, iPhone, iPad and Apple TV. It signs with a free Apple ID, refreshes apps on its own, and launches emulators with JIT, which works on Vision Pro and current iPhones again. It reads this source like AltStore does.</p>
+      <p class="actions"><a class="pill primary" href="https://apparition.illixion.com">Get Apparition</a> <a class="pill" href="https://github.com/illixion/Apparition">Source</a></p>
+    </div>
   </section>
 
   <section class="glass">
@@ -56,7 +65,7 @@
 
   <section class="glass">
     <h2>Apple Vision Pro</h2>
-    <p>Native Vision Pro builds have their own source, for SideStore's visionOS port: none are published yet. AltStore and stock SideStore don't run on Vision Pro, and the port isn't official.</p>
+    <p>Native Vision Pro builds have their own source: none are published yet. AltStore and stock SideStore don't run on Vision Pro. Add it in <a href="https://apparition.illixion.com">Apparition</a> on the headset, or in SideStore's unofficial visionOS port.</p>
     <p class="actions">
       <a class="pill" href="sidestore://source?url=https://apps.illixion.com/source-visionos.json">Add to SideStore</a>
     </p>
@@ -66,11 +75,11 @@
   <section class="glass">
     <h2>How it works</h2>
     <ol>
-      <li>Install <a href="https://altstore.io">AltStore</a> or <a href="https://sidestore.io">SideStore</a>. Both read the same source.</li>
-      <li>Add the source with the buttons above. They open the app on an iPhone or iPad.</li>
+      <li>Install <a href="https://apparition.illixion.com">Apparition</a>, <a href="https://altstore.io">AltStore</a> or <a href="https://sidestore.io">SideStore</a>. All three read the same source.</li>
+      <li>Add the source with the buttons above, which open AltStore or SideStore on an iPhone or iPad, or paste its address into Apparition.</li>
       <li>Tap Free on the app you want.</li>
     </ol>
-    <p class="muted">The apps are re-signed on your device with your own Apple ID. A free Apple ID allows three active sideloaded apps, each refreshed every seven days: AltStore does that through AltServer on a computer on your network, SideStore on the device. This page is static, with no accounts and no analytics.</p>
+    <p class="muted">The apps are re-signed on your device with your own Apple ID. A free Apple ID allows three active sideloaded apps, each refreshed every seven days: AltStore does that through AltServer on a computer on your network, SideStore on the device, and Apparition either way: through its desktop app, from anywhere over Tailscale, or on the device with LocalDevVPN. This page is static, with no accounts and no analytics.</p>
   </section>
 </main>
 <script src="copy.js"></script>

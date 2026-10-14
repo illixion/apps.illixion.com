@@ -116,3 +116,5 @@ code { font: 0.8125rem/1.5 ui-monospace, "SF Mono", Menlo, monospace; word-break
 
 ol { padding-left: 1.25rem; margin-bottom: 0.75rem; }
 ol li + li { margin-top: 0.25rem; }
+.app-promo { display: flex; gap: 1rem; align-items: flex-start; }
+.app-promo img { width: 4rem; height: 4rem; border-radius: 22%; flex: none; }
